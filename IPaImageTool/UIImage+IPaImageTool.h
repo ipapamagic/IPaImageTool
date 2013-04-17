@@ -11,5 +11,12 @@
 @interface UIImage (IPaImageTool)
 -(UIImage*)imageWithRotationFix;
 -(UIImage*)imageFitSize:(CGSize)size;
-
+-(UIImage*)imageFitWidth:(CGFloat)width;
+-(UIImage*)imageFitHeight:(CGFloat)height;
+-(UIImage*)imageWithWidth:(CGFloat)width;
+-(UIImage*)imageWithHeight:(CGFloat)height;
+-(UIImage*)imageWithSize:(CGSize)size;
+-(UIImage*)imageWithRotateRight;
+-(UIImage*)imageWithRotate180;
+-(UIImage*)imageWithRotateLeft;
 @end

@@ -87,6 +87,16 @@
     CGImageRelease(cgimg);
     return img;
 }
+-(UIImage*)imageWithSize:(CGSize)size
+{
+    UIImage *image;
+    UIGraphicsBeginImageContext(size);
+    [self drawInRect:CGRectMake(0, 0, size.width, size.height)];
+    
+    image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return image;
+}
 -(UIImage*)imageFitSize:(CGSize)size
 {
     CGSize newSize = self.size;
@@ -100,11 +110,100 @@
         newSize.width = newSize.height / ratio;
     }
     
-    UIImage *image;
-    UIGraphicsBeginImageContext(newSize);
-    [self drawInRect:CGRectMake(0, 0, newSize.width, newSize.height)];
+    return [self imageWithSize:newSize];
+}
+-(UIImage*)imageFitWidth:(CGFloat)width
+{
+    CGSize newSize = self.size;
+    CGFloat ratio = self.size.height / self.size.width;
+    if (newSize.width > width) {
+        newSize.width = width;
+        newSize.height = newSize.width * ratio;
+    }
     
-    image = UIGraphicsGetImageFromCurrentImageContext();
+    return [self imageWithSize:newSize];
+}
+-(UIImage*)imageFitHeight:(CGFloat)height
+{
+    CGSize newSize = self.size;
+    CGFloat ratio = self.size.width / self.size.height;
+    if (newSize.height > height) {
+        newSize.height = height;
+        newSize.width = newSize.height * ratio;
+    }
+    
+    return [self imageWithSize:newSize];
+}
+-(UIImage*)imageWithWidth:(CGFloat)width
+{
+    CGSize newSize = self.size;
+    CGFloat ratio = self.size.height / self.size.width;
+
+    newSize.width = width;
+    newSize.height = newSize.width * ratio;
+    
+    
+    return [self imageWithSize:newSize];
+}
+-(UIImage*)imageWithHeight:(CGFloat)height
+{
+    CGSize newSize = self.size;
+    CGFloat ratio = self.size.width / self.size.height;
+
+    newSize.height = height;
+    newSize.width = newSize.height * ratio;
+    return [self imageWithSize:newSize];
+
+}
+-(UIImage*)imageWithRotateRight
+{
+    UIGraphicsBeginImageContext(CGSizeMake(self.size.height, self.size.width));
+    
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    
+    CGFloat x = self.size.width * 0.5;
+    CGFloat y = self.size.height * 0.5;
+    CGContextTranslateCTM(context, y,x);
+    
+    CGContextRotateCTM(context, M_PI * 0.5);
+    [self drawAtPoint:CGPointMake(-x, -y)];
+    
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return image;
+}
+-(UIImage*)imageWithRotate180
+{
+    UIGraphicsBeginImageContext(CGSizeMake(self.size.width, self.size.height));
+    
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    
+    CGFloat x = self.size.width * 0.5;
+    CGFloat y = self.size.height * 0.5;
+    CGContextTranslateCTM(context, x,y);
+    
+    CGContextRotateCTM(context, M_PI);
+    [self drawAtPoint:CGPointMake(-x, -y)];
+    
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return image;
+}
+-(UIImage*)imageWithRotateLeft
+{
+    UIGraphicsBeginImageContext(CGSizeMake(self.size.height, self.size.width));
+    
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    
+    CGFloat x = self.size.width * 0.5;
+    CGFloat y = self.size.height * 0.5;
+  
+    CGContextTranslateCTM(context, y,x);
+    
+    CGContextRotateCTM(context, -M_PI * 0.5);
+    [self drawAtPoint:CGPointMake(-x, -y)];
+    
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return image;
 }
