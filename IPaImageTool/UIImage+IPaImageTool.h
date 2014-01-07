@@ -19,4 +19,5 @@
 -(UIImage*)imageWithRotateRight;
 -(UIImage*)imageWithRotate180;
 -(UIImage*)imageWithRotateLeft;
+-(UIImage*)imageWithCropRect:(CGRect)rect;
 @end

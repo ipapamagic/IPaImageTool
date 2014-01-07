@@ -9,6 +9,16 @@
 #import "UIImage+IPaImageTool.h"
 
 @implementation UIImage (IPaImageTool)
+-(UIImage*)imageWithCropRect:(CGRect)rect
+{
+    UIGraphicsBeginImageContext(rect.size);
+    [self drawAtPoint:CGPointMake(-rect.origin.x, -rect.origin.y)];
+    
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    
+    UIGraphicsEndImageContext();
+    return image;
+}
 -(UIImage*)imageWithRotationFix
 {
     
