@@ -217,4 +217,30 @@
     UIGraphicsEndImageContext();
     return image;
 }
+- (UIImage*)imageWithAspectFillSize:(CGSize)size
+{
+    UIGraphicsBeginImageContext(size);
+    CGFloat sizeRatio = size.width / size.height;
+    CGFloat ratio = self.size.width / self.size.height;
+    CGRect drawRect = CGRectZero;
+    if (sizeRatio >= ratio) {
+        drawRect.size.width = size.width;
+        drawRect.size.height = size.width / ratio;
+        drawRect.origin.y = -((drawRect.size.height - size.height) * .5);
+    }
+    else {
+        drawRect.size.height = size.height;
+        drawRect.size.width = size.height * ratio;
+        drawRect.origin.x = - ((drawRect.size.width - size.width) * .5);
+        
+    }
+    [self drawInRect:drawRect];
+    
+    
+    
+    
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return image;
+}
 @end
