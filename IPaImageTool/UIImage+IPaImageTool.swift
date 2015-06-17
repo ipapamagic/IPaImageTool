@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 extension UIImage {
     func imageWithCropRect(rect:CGRect) -> UIImage! {
         UIGraphicsBeginImageContext(rect.size)
