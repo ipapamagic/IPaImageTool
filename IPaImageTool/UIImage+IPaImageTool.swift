@@ -71,23 +71,23 @@ extension UIImage {
 //        CGImageRelease(cgimg)
         return img;
     }
-    func imageWithSize(size:CGSize) -> UIImage {
+    func imageWithSize(newSize:CGSize) -> UIImage {
         
-        UIGraphicsBeginImageContext(size)
-        drawInRect(CGRectMake(0, 0, size.width, size.height))
+        UIGraphicsBeginImageContext(newSize)
+        drawInRect(CGRectMake(0, 0, newSize.width, newSize.height))
         let image = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext()
         return image
     }
-    func imageFitSize(size:CGSize) -> UIImage {
+    func imageFitSize(fitSize:CGSize) -> UIImage {
         var newSize = size
         let ratio = size.height / size.width
-        if (newSize.width > size.width) {
-            newSize.width = size.width
+        if (newSize.width > fitSize.width) {
+            newSize.width = fitSize.width
             newSize.height = newSize.width * ratio
         }
-        if(newSize.height > size.height) {
-            newSize.height = size.height
+        if(newSize.height > fitSize.height) {
+            newSize.height = fitSize.height
             newSize.width = newSize.height / ratio
         }
         
@@ -177,28 +177,24 @@ extension UIImage {
         UIGraphicsEndImageContext()
         return image
     }
-    func imageWithAspectFillSize(size:CGSize) -> UIImage
+    func imageWithAspectFillSize(fillSize:CGSize) -> UIImage
     {
         UIGraphicsBeginImageContext(size)
-        let sizeRatio = size.width / size.height
+        let sizeRatio = fillSize.width / fillSize.height
         let ratio = size.width / size.height
         var drawRect = CGRectZero
         if sizeRatio >= ratio {
-            drawRect.size.width = size.width
-            drawRect.size.height = size.width / ratio
+            drawRect.size.width = fillSize.width
+            drawRect.size.height = fillSize.width / ratio
             drawRect.origin.y = -((drawRect.size.height - size.height) * 0.5)
         }
         else {
-            drawRect.size.height = size.height
-            drawRect.size.width = size.height * ratio
+            drawRect.size.height = fillSize.height
+            drawRect.size.width = fillSize.height * ratio
             drawRect.origin.x = -((drawRect.size.width - size.width) * 0.5)
     
         }
         drawInRect(drawRect)
-    
-    
-    
-    
         let image = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
         return image
