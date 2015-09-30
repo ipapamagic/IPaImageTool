@@ -52,7 +52,7 @@ extension UIImage {
         let ctx = CGBitmapContextCreate(nil, Int(size.width), Int(size.height),
             CGImageGetBitsPerComponent(CGImage), 0,
             CGImageGetColorSpace(CGImage),
-            CGImageGetBitmapInfo(CGImage))
+            UInt32(CGImageGetBitmapInfo(CGImage).rawValue))
 
         CGContextConcatCTM(ctx, transform);
         switch (imageOrientation) {
@@ -66,7 +66,7 @@ extension UIImage {
         
         // And now we just create a new UIImage from the drawing context
         let cgimg = CGBitmapContextCreateImage(ctx);
-        let img = UIImage(CGImage: cgimg)
+        let img = UIImage(CGImage: cgimg!)
 //        CGContextRelease(ctx)
 //        CGImageRelease(cgimg)
         return img;
