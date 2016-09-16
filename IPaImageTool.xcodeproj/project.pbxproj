@@ -8,28 +8,13 @@
 
 /* Begin PBXBuildFile section */
 		6E7A71451B31184C002547B7 /* IPaImageTool.h in Headers */ = {isa = PBXBuildFile; fileRef = 6E7A71441B31184C002547B7 /* IPaImageTool.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		6E7A714B1B31184C002547B7 /* IPaImageTool.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E7A713F1B31184C002547B7 /* IPaImageTool.framework */; };
-		6E7A71521B31184C002547B7 /* IPaImageToolTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E7A71511B31184C002547B7 /* IPaImageToolTests.swift */; };
 		6E7A715E1B311898002547B7 /* UIImage+IPaImageTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E7A715D1B311898002547B7 /* UIImage+IPaImageTool.swift */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		6E7A714C1B31184C002547B7 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 6E7A71361B31184C002547B7 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 6E7A713E1B31184C002547B7;
-			remoteInfo = IPaImageTool;
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		6E7A713F1B31184C002547B7 /* IPaImageTool.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = IPaImageTool.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6E7A71431B31184C002547B7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6E7A71441B31184C002547B7 /* IPaImageTool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IPaImageTool.h; sourceTree = "<group>"; };
-		6E7A714A1B31184C002547B7 /* IPaImageToolTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = IPaImageToolTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		6E7A71501B31184C002547B7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		6E7A71511B31184C002547B7 /* IPaImageToolTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPaImageToolTests.swift; sourceTree = "<group>"; };
 		6E7A715D1B311898002547B7 /* UIImage+IPaImageTool.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+IPaImageTool.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -41,14 +26,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		6E7A71471B31184C002547B7 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				6E7A714B1B31184C002547B7 /* IPaImageTool.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -56,7 +33,6 @@
 			isa = PBXGroup;
 			children = (
 				6E7A71411B31184C002547B7 /* IPaImageTool */,
-				6E7A714E1B31184C002547B7 /* IPaImageToolTests */,
 				6E7A71401B31184C002547B7 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -65,7 +41,6 @@
 			isa = PBXGroup;
 			children = (
 				6E7A713F1B31184C002547B7 /* IPaImageTool.framework */,
-				6E7A714A1B31184C002547B7 /* IPaImageToolTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -84,23 +59,6 @@
 			isa = PBXGroup;
 			children = (
 				6E7A71431B31184C002547B7 /* Info.plist */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		6E7A714E1B31184C002547B7 /* IPaImageToolTests */ = {
-			isa = PBXGroup;
-			children = (
-				6E7A71511B31184C002547B7 /* IPaImageToolTests.swift */,
-				6E7A714F1B31184C002547B7 /* Supporting Files */,
-			);
-			path = IPaImageToolTests;
-			sourceTree = "<group>";
-		};
-		6E7A714F1B31184C002547B7 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				6E7A71501B31184C002547B7 /* Info.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -137,37 +95,17 @@
 			productReference = 6E7A713F1B31184C002547B7 /* IPaImageTool.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		6E7A71491B31184C002547B7 /* IPaImageToolTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 6E7A71581B31184C002547B7 /* Build configuration list for PBXNativeTarget "IPaImageToolTests" */;
-			buildPhases = (
-				6E7A71461B31184C002547B7 /* Sources */,
-				6E7A71471B31184C002547B7 /* Frameworks */,
-				6E7A71481B31184C002547B7 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				6E7A714D1B31184C002547B7 /* PBXTargetDependency */,
-			);
-			name = IPaImageToolTests;
-			productName = IPaImageToolTests;
-			productReference = 6E7A714A1B31184C002547B7 /* IPaImageToolTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		6E7A71361B31184C002547B7 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0630;
+				LastSwiftUpdateCheck = 0700;
+				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = AMagicStudio;
 				TargetAttributes = {
 					6E7A713E1B31184C002547B7 = {
-						CreatedOnToolsVersion = 6.3.2;
-					};
-					6E7A71491B31184C002547B7 = {
 						CreatedOnToolsVersion = 6.3.2;
 					};
 				};
@@ -185,20 +123,12 @@
 			projectRoot = "";
 			targets = (
 				6E7A713E1B31184C002547B7 /* IPaImageTool */,
-				6E7A71491B31184C002547B7 /* IPaImageToolTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		6E7A713D1B31184C002547B7 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		6E7A71481B31184C002547B7 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -216,23 +146,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		6E7A71461B31184C002547B7 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				6E7A71521B31184C002547B7 /* IPaImageToolTests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		6E7A714D1B31184C002547B7 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 6E7A713E1B31184C002547B7 /* IPaImageTool */;
-			targetProxy = 6E7A714C1B31184C002547B7 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		6E7A71531B31184C002547B7 /* Debug */ = {
@@ -257,6 +171,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -335,6 +250,7 @@
 				INFOPLIST_FILE = IPaImageTool/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.AMagicStudio.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -352,38 +268,9 @@
 				INFOPLIST_FILE = IPaImageTool/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.AMagicStudio.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-			};
-			name = Release;
-		};
-		6E7A71591B31184C002547B7 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-				);
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = IPaImageToolTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Debug;
-		};
-		6E7A715A1B31184C002547B7 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = IPaImageToolTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
 		};
@@ -406,14 +293,7 @@
 				6E7A71571B31184C002547B7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-		};
-		6E7A71581B31184C002547B7 /* Build configuration list for PBXNativeTarget "IPaImageToolTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				6E7A71591B31184C002547B7 /* Debug */,
-				6E7A715A1B31184C002547B7 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
