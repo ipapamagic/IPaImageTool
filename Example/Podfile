@@ -1,0 +1,6 @@
+use_frameworks!
+target 'IPaImageTool_Tests' do
+  pod 'IPaImageTool', :path => '../'
+  
+  
+end

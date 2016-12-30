@@ -1,0 +1,16 @@
+PODS:
+  - IPaImageTool (0.1.0)
+
+DEPENDENCIES:
+  - IPaImageTool (from `../`)
+
+EXTERNAL SOURCES:
+  IPaImageTool:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  IPaImageTool: 3c142292c9b00f4ad682349aa12f104d4db309c3
+
+PODFILE CHECKSUM: 02341c25f1627973d380031d7829acc6ed8d3c19
+
+COCOAPODS: 1.1.1
