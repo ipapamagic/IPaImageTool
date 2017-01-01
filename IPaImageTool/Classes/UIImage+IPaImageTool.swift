@@ -9,14 +9,14 @@
 import Foundation
 import UIKit
 extension UIImage {
-    func imageWithCropRect(_ rect:CGRect) -> UIImage! {
+     public func imageWithCropRect(_ rect:CGRect) -> UIImage! {
         UIGraphicsBeginImageContext(rect.size)
         draw(at: CGPoint(x: -rect.origin.x, y: -rect.origin.y))
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         return image
     }
-    func imageWithRotationFix() -> UIImage! {
+     public func imageWithRotationFix() -> UIImage! {
         if imageOrientation == .up {
             return self
         }
@@ -71,7 +71,7 @@ extension UIImage {
 //        CGImageRelease(cgimg)
         return img;
     }
-    func imageWithSize(_ newSize:CGSize) -> UIImage {
+    public func imageWithSize(_ newSize:CGSize) -> UIImage {
         
         UIGraphicsBeginImageContext(newSize)
         draw(in: CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height))
@@ -79,7 +79,7 @@ extension UIImage {
         UIGraphicsEndImageContext()
         return image!
     }
-    func imageFitSize(_ fitSize:CGSize) -> UIImage {
+    public func imageFitSize(_ fitSize:CGSize) -> UIImage {
         var newSize = size
         let ratio = size.height / size.width
         if (newSize.width > fitSize.width) {
@@ -93,7 +93,7 @@ extension UIImage {
         
         return imageWithSize(newSize)
     }
-    func imageFitWidth(_ width:CGFloat) -> UIImage {
+    public func imageFitWidth(_ width:CGFloat) -> UIImage {
         var newSize = size
         let ratio = size.height / size.width
         if newSize.width > width {
@@ -104,7 +104,7 @@ extension UIImage {
         return imageWithSize(newSize)
     }
     
-    func imageFitHeight(_ height:CGFloat) -> UIImage
+    public func imageFitHeight(_ height:CGFloat) -> UIImage
     {
         var newSize = size
         let ratio = size.width / size.height
@@ -115,7 +115,7 @@ extension UIImage {
     
         return imageWithSize(newSize)
     }
-    func imageWithWidth(_ width:CGFloat) -> UIImage
+    public func imageWithWidth(_ width:CGFloat) -> UIImage
     {
         var newSize = size
         let ratio = size.height / size.width
@@ -124,7 +124,7 @@ extension UIImage {
         newSize.height = newSize.width * ratio
         return imageWithSize(newSize)
     }
-    func imageWithHeight(_ height:CGFloat) -> UIImage
+    public func imageWithHeight(_ height:CGFloat) -> UIImage
     {
         var newSize = size
         let ratio = size.width / size.height
@@ -134,7 +134,7 @@ extension UIImage {
         return imageWithSize(newSize)
     
     }
-    func imageWithRotateRight() -> UIImage
+    public func imageWithRotateRight() -> UIImage
     {
         UIGraphicsBeginImageContext(CGSize(width: size.height, height: size.width))
     
@@ -149,7 +149,7 @@ extension UIImage {
         UIGraphicsEndImageContext();
         return image!;
     }
-    func imageWithRotate180() -> UIImage
+    public func imageWithRotate180() -> UIImage
     {
         UIGraphicsBeginImageContext(CGSize(width: size.width, height: size.height))
     
@@ -163,7 +163,7 @@ extension UIImage {
         UIGraphicsEndImageContext()
         return image!
     }
-    func imageWithRotateLeft() -> UIImage
+    public func imageWithRotateLeft() -> UIImage
     {
         UIGraphicsBeginImageContext(CGSize(width: size.height, height: size.width))
     
@@ -177,7 +177,7 @@ extension UIImage {
         UIGraphicsEndImageContext()
         return image!
     }
-    func imageWithAspectFillSize(_ fillSize:CGSize) -> UIImage
+    public func imageWithAspectFillSize(_ fillSize:CGSize) -> UIImage
     {
         UIGraphicsBeginImageContext(fillSize)
         let sizeRatio = fillSize.width / fillSize.height
