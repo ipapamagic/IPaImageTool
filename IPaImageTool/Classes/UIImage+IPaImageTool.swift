@@ -180,6 +180,15 @@ extension UIImage {
     public func imageWithAspectFillSize(_ fillSize:CGSize) -> UIImage
     {
         UIGraphicsBeginImageContext(fillSize)
+        draw(aspectFillSize: fillSize)
+        let image = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        return image!
+    }
+    
+    //MARK: draw function
+    public func draw(aspectFillSize fillSize:CGSize)
+    {
         let sizeRatio = fillSize.width / fillSize.height
         let ratio = size.width / size.height
         var drawRect = CGRect.zero
@@ -192,14 +201,11 @@ extension UIImage {
             drawRect.size.height = fillSize.height
             drawRect.size.width = fillSize.height * ratio
             drawRect.origin.x = -((drawRect.size.width - fillSize.width) * 0.5)
-    
+            
         }
         draw(in: drawRect)
-        let image = UIGraphicsGetImageFromCurrentImageContext();
-        UIGraphicsEndImageContext();
-        return image!
     }
-
+    
 }
 
 
