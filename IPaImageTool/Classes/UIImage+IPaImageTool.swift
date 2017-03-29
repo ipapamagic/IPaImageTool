@@ -24,13 +24,13 @@ extension UIImage {
         switch (imageOrientation) {
         case .down,.downMirrored:
             transform = transform.translatedBy(x: size.width, y: self.size.height)
-            transform = transform.rotated(by: CGFloat(M_PI))
+            transform = transform.rotated(by: .pi)
         case .left,.leftMirrored:
             transform = transform.translatedBy(x: size.width, y: 0)
-            transform = transform.rotated(by: CGFloat(M_PI_2))
+            transform = transform.rotated(by: .pi*0.5)
         case .right,.rightMirrored:
             transform = transform.translatedBy(x: 0, y: size.height)
-            transform = transform.rotated(by: CGFloat(-M_PI_2))
+            transform = transform.rotated(by: .pi * (-0.5))
         case .up,.upMirrored:
             break;
         }
@@ -142,7 +142,7 @@ extension UIImage {
         let x = size.width * 0.5
         let y = size.height * 0.5
         context?.translateBy(x: y,y: x)
-        context?.rotate(by: CGFloat(M_PI) * 0.5)
+        context?.rotate(by: .pi * 0.5)
         draw(at: CGPoint(x: -x, y: -y))
     
         let image = UIGraphicsGetImageFromCurrentImageContext();
@@ -157,7 +157,7 @@ extension UIImage {
         let x = size.width * 0.5;
         let y = size.height * 0.5;
         context?.translateBy(x: x,y: y)
-        context?.rotate(by: CGFloat(M_PI))
+        context?.rotate(by: .pi)
         draw(at: CGPoint(x: -x, y: -y))
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
@@ -171,7 +171,7 @@ extension UIImage {
         let x = size.width * 0.5
         let y = size.height * 0.5
         context?.translateBy(x: y,y: x)
-        context?.rotate(by: CGFloat(-M_PI) * 0.5)
+        context?.rotate(by: .pi * -0.5)
         draw(at: CGPoint(x: -x, y: -y))
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
