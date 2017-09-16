@@ -1,6 +1,11 @@
 use_frameworks!
-target 'IPaImageTool_Tests' do
+
+target 'IPaImageTool_Example' do
   pod 'IPaImageTool', :path => '../'
-  
-  
+
+  target 'IPaImageTool_Tests' do
+    inherit! :search_paths
+
+    pod 'FBSnapshotTestCase'
+  end
 end

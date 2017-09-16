@@ -9,77 +9,98 @@
 import Foundation
 import UIKit
 extension UIImage {
-     public func imageWithCropRect(_ rect:CGRect) -> UIImage! {
-        UIGraphicsBeginImageContext(rect.size)
+    public func image(apply transform:CGAffineTransform) -> UIImage! {
+        var bounds = CGRect(origin: .zero, size: self.size)
+        
+        bounds = bounds.applying(transform)
+        
+        var ciImage:CIImage = self.ciImage ?? CIImage(cgImage: self.cgImage!)
+        
+        ciImage = ciImage.applying(transform)
+        let context = CIContext(options: nil)
+        if let cgImage = context.createCGImage(ciImage, from: ciImage.extent) {
+            return UIImage(cgImage: cgImage)
+        }
+        
+        let newImage = UIImage(ciImage: ciImage)
+        
+        
+        return newImage
+        
+    }
+    public func image(cropRect rect:CGRect) -> UIImage! {
+        UIGraphicsBeginImageContextWithOptions(rect.size, false, 0)
         draw(at: CGPoint(x: -rect.origin.x, y: -rect.origin.y))
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         return image
     }
-     public func imageWithRotationFix() -> UIImage! {
-        if imageOrientation == .up {
-            return self
-        }
-        var transform = CGAffineTransform.identity
-        switch (imageOrientation) {
-        case .down,.downMirrored:
-            transform = transform.translatedBy(x: size.width, y: self.size.height)
-            transform = transform.rotated(by: .pi)
-        case .left,.leftMirrored:
-            transform = transform.translatedBy(x: size.width, y: 0)
-            transform = transform.rotated(by: .pi*0.5)
-        case .right,.rightMirrored:
-            transform = transform.translatedBy(x: 0, y: size.height)
-            transform = transform.rotated(by: .pi * (-0.5))
-        case .up,.upMirrored:
-            break;
-        }
-        
-        switch (self.imageOrientation) {
-        case .upMirrored,.downMirrored:
-            transform = transform.translatedBy(x: size.width, y: 0)
-            transform = transform.scaledBy(x: -1, y: 1)
+    public var rotationFixImage:UIImage! {
+        get {
+            if imageOrientation == .up {
+                return self
+            }
+            var transform = CGAffineTransform.identity
+            switch (imageOrientation) {
+            case .down,.downMirrored:
+                transform = transform.translatedBy(x: size.width, y: self.size.height)
+                transform = transform.rotated(by: .pi)
+            case .left,.leftMirrored:
+                transform = transform.translatedBy(x: size.width, y: 0)
+                transform = transform.rotated(by: .pi*0.5)
+            case .right,.rightMirrored:
+                transform = transform.translatedBy(x: 0, y: size.height)
+                transform = transform.rotated(by: .pi * (-0.5))
+            case .up,.upMirrored:
+                break
+            }
             
-        case .leftMirrored,.rightMirrored:
-            transform = transform.translatedBy(x: size.height, y: 0)
-            transform = transform.scaledBy(x: -1, y: 1)
-        case .up,.down,.left,.right:
-            break;
-        }
-        
-        // Now we draw the underlying CGImage into a new context, applying the transform
-        // calculated above.
-        let ctx = CGContext(data: nil, width: Int(size.width), height: Int(size.height),
-            bitsPerComponent: (cgImage?.bitsPerComponent)!, bytesPerRow: 0,
-            space: (cgImage?.colorSpace!)!,
-            bitmapInfo: UInt32((cgImage?.bitmapInfo.rawValue)!))
+            switch (self.imageOrientation) {
+            case .upMirrored,.downMirrored:
+                transform = transform.translatedBy(x: size.width, y: 0)
+                transform = transform.scaledBy(x: -1, y: 1)
+                
+            case .leftMirrored,.rightMirrored:
+                transform = transform.translatedBy(x: size.height, y: 0)
+                transform = transform.scaledBy(x: -1, y: 1)
+            case .up,.down,.left,.right:
+                break
+            }
+            
+            // Now we draw the underlying CGImage into a new context, applying the transform
+            // calculated above.
+            let ctx = CGContext(data: nil, width: Int(size.width), height: Int(size.height),
+                bitsPerComponent: (cgImage?.bitsPerComponent)!, bytesPerRow: 0,
+                space: (cgImage?.colorSpace!)!,
+                bitmapInfo: UInt32((cgImage?.bitmapInfo.rawValue)!))
 
-        ctx?.concatenate(transform);
-        switch (imageOrientation) {
-        case .left,.leftMirrored,.right,.rightMirrored:
-            // Grr...
-            ctx?.draw(cgImage!, in: CGRect(x: 0,y: 0,width: size.height,height: size.width))
+            ctx?.concatenate(transform)
+            switch (imageOrientation) {
+            case .left,.leftMirrored,.right,.rightMirrored:
+                // Grr...
+                ctx?.draw(cgImage!, in: CGRect(x: 0,y: 0,width: size.height,height: size.width))
+                
+            default:
+                ctx?.draw(cgImage!, in: CGRect(x: 0,y: 0,width: size.width,height: size.height))
+            }
             
-        default:
-            ctx?.draw(cgImage!, in: CGRect(x: 0,y: 0,width: size.width,height: size.height))
+            // And now we just create a new UIImage from the drawing context
+            let cgimg = ctx?.makeImage()
+            let img = UIImage(cgImage: cgimg!)
+    //        CGContextRelease(ctx)
+    //        CGImageRelease(cgimg)
+            return img
         }
-        
-        // And now we just create a new UIImage from the drawing context
-        let cgimg = ctx?.makeImage();
-        let img = UIImage(cgImage: cgimg!)
-//        CGContextRelease(ctx)
-//        CGImageRelease(cgimg)
-        return img;
     }
-    public func imageWithSize(_ newSize:CGSize) -> UIImage {
+    public func image(size newSize:CGSize) -> UIImage {
         
-        UIGraphicsBeginImageContext(newSize)
+        UIGraphicsBeginImageContextWithOptions(newSize, false, 0)
         draw(in: CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height))
-        let image = UIGraphicsGetImageFromCurrentImageContext();
+        let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         return image!
     }
-    public func imageFitSize(_ fitSize:CGSize) -> UIImage {
+    public func image(fitSize:CGSize) -> UIImage {
         var newSize = size
         let ratio = size.height / size.width
         if (newSize.width > fitSize.width) {
@@ -91,9 +112,9 @@ extension UIImage {
             newSize.width = newSize.height / ratio
         }
         
-        return imageWithSize(newSize)
+        return image(size:newSize)
     }
-    public func imageFitWidth(_ width:CGFloat) -> UIImage {
+    public func image(fitWidth width:CGFloat) -> UIImage {
         var newSize = size
         let ratio = size.height / size.width
         if newSize.width > width {
@@ -101,10 +122,10 @@ extension UIImage {
             newSize.height = newSize.width * ratio
         }
         
-        return imageWithSize(newSize)
+        return image(size:newSize)
     }
     
-    public func imageFitHeight(_ height:CGFloat) -> UIImage
+    public func image(fitHeight height:CGFloat) -> UIImage
     {
         var newSize = size
         let ratio = size.width / size.height
@@ -113,78 +134,112 @@ extension UIImage {
             newSize.width = newSize.height * ratio
         }
     
-        return imageWithSize(newSize)
+        return image(size:newSize)
     }
-    public func imageWithWidth(_ width:CGFloat) -> UIImage
+    public func image(withWidth width:CGFloat) -> UIImage
     {
         var newSize = size
         let ratio = size.height / size.width
     
         newSize.width = width
         newSize.height = newSize.width * ratio
-        return imageWithSize(newSize)
+        return image(size:newSize)
     }
-    public func imageWithHeight(_ height:CGFloat) -> UIImage
+    public func image(withHeight height:CGFloat) -> UIImage
     {
         var newSize = size
         let ratio = size.width / size.height
     
         newSize.height = height
         newSize.width = newSize.height * ratio
-        return imageWithSize(newSize)
+        return image(size:newSize)
     
     }
-    public func imageWithRotateRight() -> UIImage
+    public var rotateRightImage:UIImage
     {
-        UIGraphicsBeginImageContext(CGSize(width: size.height, height: size.width))
-    
-        let context = UIGraphicsGetCurrentContext()
-        let x = size.width * 0.5
-        let y = size.height * 0.5
-        context?.translateBy(x: y,y: x)
-        context?.rotate(by: .pi * 0.5)
-        draw(at: CGPoint(x: -x, y: -y))
-    
-        let image = UIGraphicsGetImageFromCurrentImageContext();
-        UIGraphicsEndImageContext();
-        return image!;
+        get {
+            UIGraphicsBeginImageContextWithOptions(CGSize(width: size.height, height: size.width), false, 0)
+        
+            let context = UIGraphicsGetCurrentContext()
+            let x = size.width * 0.5
+            let y = size.height * 0.5
+            context?.translateBy(x: y,y: x)
+            context?.rotate(by: .pi * 0.5)
+            draw(at: CGPoint(x: -x, y: -y))
+        
+            let image = UIGraphicsGetImageFromCurrentImageContext()
+            UIGraphicsEndImageContext()
+            return image!
+        }
     }
-    public func imageWithRotate180() -> UIImage
+    public var rotate180Image:UIImage
     {
-        UIGraphicsBeginImageContext(CGSize(width: size.width, height: size.height))
-    
-        let context = UIGraphicsGetCurrentContext();
-        let x = size.width * 0.5;
-        let y = size.height * 0.5;
-        context?.translateBy(x: x,y: y)
-        context?.rotate(by: .pi)
-        draw(at: CGPoint(x: -x, y: -y))
-        let image = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        return image!
+        get {
+            UIGraphicsBeginImageContextWithOptions(CGSize(width: size.width, height: size.height), false, 0)
+        
+            let context = UIGraphicsGetCurrentContext()
+            let x = size.width * 0.5
+            let y = size.height * 0.5
+            context?.translateBy(x: x,y: y)
+            context?.rotate(by: .pi)
+            draw(at: CGPoint(x: -x, y: -y))
+            let image = UIGraphicsGetImageFromCurrentImageContext()
+            UIGraphicsEndImageContext()
+            return image!
+        }
     }
-    public func imageWithRotateLeft() -> UIImage
+    public var rotateLeftImage:UIImage
     {
-        UIGraphicsBeginImageContext(CGSize(width: size.height, height: size.width))
-    
-        let context = UIGraphicsGetCurrentContext()
-        let x = size.width * 0.5
-        let y = size.height * 0.5
-        context?.translateBy(x: y,y: x)
-        context?.rotate(by: .pi * -0.5)
-        draw(at: CGPoint(x: -x, y: -y))
-        let image = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        return image!
+        get {
+            UIGraphicsBeginImageContextWithOptions(CGSize(width: size.height, height: size.width), false, 0)
+        
+            let context = UIGraphicsGetCurrentContext()
+            let x = size.width * 0.5
+            let y = size.height * 0.5
+            context?.translateBy(x: y,y: x)
+            context?.rotate(by: .pi * -0.5)
+            draw(at: CGPoint(x: -x, y: -y))
+            let image = UIGraphicsGetImageFromCurrentImageContext()
+            UIGraphicsEndImageContext()
+            return image!
+        }
     }
-    public func imageWithAspectFillSize(_ fillSize:CGSize) -> UIImage
+    public func image(aspectFillSize fillSize:CGSize) -> UIImage
     {
-        UIGraphicsBeginImageContext(fillSize)
+        UIGraphicsBeginImageContextWithOptions(fillSize, false, 0)
         draw(aspectFillSize: fillSize)
-        let image = UIGraphicsGetImageFromCurrentImageContext();
-        UIGraphicsEndImageContext();
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
         return image!
     }
+    
+    public func blurImage(radius:Float) -> UIImage {
+        guard let cgImage = cgImage,let filter = CIFilter(name: "CIGaussianBlur") else {
+            return self
+        }
+        let context = CIContext(options: nil)
+        // create our blurred image
+        let inputImage = CIImage(cgImage: cgImage)
+        
+        
+        // setting up Gaussian Blur (we could use one of many filters offered by Core Image)
+        filter.setValue(inputImage, forKey: kCIInputImageKey)
+        filter.setValue(NSNumber(value:radius), forKey: "inputRadius")
+        let result = filter.value(forKey: kCIOutputImageKey) as! CIImage
+        
+        guard let newCGImage = context.createCGImage(result, from: inputImage.extent) else {
+            return self
+        }
+        // CIGaussianBlur has a tendency to shrink the image a little,
+        // this ensures it matches up exactly to the bounds of our original image
+        let returnImage = UIImage(cgImage: newCGImage)
+    
+        
+        return returnImage
+    
+        
+    }
+    
     
     //MARK: draw function
     public func draw(aspectFillSize fillSize:CGSize)
