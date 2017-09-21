@@ -16,7 +16,7 @@ extension UIImage {
         
         var ciImage:CIImage = self.ciImage ?? CIImage(cgImage: self.cgImage!)
         
-        ciImage = ciImage.applying(transform)
+        ciImage = ciImage.transformed(by: transform)
         let context = CIContext(options: nil)
         if let cgImage = context.createCGImage(ciImage, from: ciImage.extent) {
             return UIImage(cgImage: cgImage)

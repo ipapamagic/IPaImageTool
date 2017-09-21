@@ -22,24 +22,16 @@ class ViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
 
-    @IBAction func onRotateImage45(_ sender: Any) {
-        
-        angle += 45
-        let transform = CGAffineTransform(rotationAngle: CGFloat(angle * Float.pi / 180.0) )
-        
-        let newImage = originalImage.image(apply:transform)!
-//        print(newImage)
-        contentImageView.image = newImage
-//        let data = UIImageJPEGRepresentation(newImage, 1)
-//        
-//        let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first!
-//        let url = URL(fileURLWithPath: (path as NSString).appendingPathComponent("1.jpg"))
-//        do {
-//            try data?.write(to: url)
-//        }
-//        catch {
-//            
-//        }
-    }
+//    @IBAction func onRotateImage45(_ sender: Any) {
+//
+//        angle += 45
+//        let transform = CGAffineTransform(rotationAngle: CGFloat(angle * Float.pi / 180.0) )
+//
+////        let newImage = originalImage.image(apply:transform)!
+//        let newImage = originalImage.image(contextCTM:transform,rect:CGRect(x:0, y: 0, width: 100, height: 100))
+////        print(newImage)
+//        contentImageView.image = newImage
+//
+//    }
 }
 
