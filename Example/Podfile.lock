@@ -4,7 +4,7 @@ PODS:
   - FBSnapshotTestCase/Core (2.1.4)
   - FBSnapshotTestCase/SwiftSupport (2.1.4):
     - FBSnapshotTestCase/Core
-  - IPaImageTool (1.2)
+  - IPaImageTool (2.1)
 
 DEPENDENCIES:
   - FBSnapshotTestCase
@@ -16,7 +16,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   FBSnapshotTestCase: 094f9f314decbabe373b87cc339bea235a63e07a
-  IPaImageTool: 66299627f4302534191c71c1679953049181e491
+  IPaImageTool: 162880f81d81d24238565c78f7b594c0c31d57c6
 
 PODFILE CHECKSUM: 6cfdf2731d288c5cb7479b09e0e117c78794d60f
 
