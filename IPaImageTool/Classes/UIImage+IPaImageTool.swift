@@ -9,20 +9,24 @@
 import Foundation
 import UIKit
 extension UIImage {
-    public func image(apply transform:CGAffineTransform) -> UIImage! {
-        var bounds = CGRect(origin: .zero, size: self.size)
-        
-        bounds = bounds.applying(transform)
-        
+    public func image(apply transform:CGAffineTransform,context:CIContext? = nil) -> UIImage! {
         var ciImage:CIImage = self.ciImage ?? CIImage(cgImage: self.cgImage!)
         
         ciImage = ciImage.transformed(by: transform)
-        let context = CIContext(options: nil)
-        if let cgImage = context.createCGImage(ciImage, from: ciImage.extent) {
-            return UIImage(cgImage: cgImage)
+        var ciContext:CIContext
+        if context == nil {
+            ciContext = CIContext(options: [kCIContextUseSoftwareRenderer:true])
+        }
+        else {
+            ciContext = context!
+        }
+        if let cgImage = ciContext.createCGImage(ciImage, from: ciImage.extent) {
+            let newImage = UIImage(cgImage: cgImage, scale: self.scale, orientation: .up)
+            
+            return newImage
         }
         
-        let newImage = UIImage(ciImage: ciImage)
+        let newImage = UIImage(ciImage: ciImage, scale: self.scale, orientation: .up)
         
         
         return newImage
