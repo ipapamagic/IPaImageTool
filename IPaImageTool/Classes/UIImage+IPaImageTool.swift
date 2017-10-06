@@ -9,26 +9,19 @@
 import Foundation
 import UIKit
 extension UIImage {
-    public func image(apply transform:CGAffineTransform,context:CIContext? = nil) -> UIImage! {
-        var ciImage:CIImage = self.ciImage ?? CIImage(cgImage: self.cgImage!)
+    public func image(apply transform:CGAffineTransform) -> UIImage! {
+        let bounds = CGRect(origin: .zero, size: self.size).applying(transform)
         
-        ciImage = ciImage.transformed(by: transform)
-        var ciContext:CIContext
-        if context == nil {
-            ciContext = CIContext(options: [kCIContextUseSoftwareRenderer:true])
-        }
-        else {
-            ciContext = context!
-        }
-        if let cgImage = ciContext.createCGImage(ciImage, from: ciImage.extent) {
-            let newImage = UIImage(cgImage: cgImage, scale: self.scale, orientation: .up)
-            
-            return newImage
-        }
+        UIGraphicsBeginImageContextWithOptions(bounds.size, true, 0)
         
-        let newImage = UIImage(ciImage: ciImage, scale: self.scale, orientation: .up)
+        let context = UIGraphicsGetCurrentContext()!
         
-        
+        context.translateBy(x: bounds.size.width * 0.5, y: bounds.size.height * 0.5)
+      
+        context.concatenate(transform)
+        self.draw(at: CGPoint(x: -self.size.width * 0.5, y: -self.size.height * 0.5))
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()!
+        UIGraphicsEndImageContext()
         return newImage
         
     }
@@ -162,51 +155,25 @@ extension UIImage {
     public var rotateRightImage:UIImage
     {
         get {
-            UIGraphicsBeginImageContextWithOptions(CGSize(width: size.height, height: size.width), false, 0)
-        
-            let context = UIGraphicsGetCurrentContext()
-            let x = size.width * 0.5
-            let y = size.height * 0.5
-            context?.translateBy(x: y,y: x)
-            context?.rotate(by: .pi * 0.5)
-            draw(at: CGPoint(x: -x, y: -y))
-        
-            let image = UIGraphicsGetImageFromCurrentImageContext()
-            UIGraphicsEndImageContext()
-            return image!
+            return self.image(rotateBy:.pi * 0.5)
         }
     }
     public var rotate180Image:UIImage
     {
         get {
-            UIGraphicsBeginImageContextWithOptions(CGSize(width: size.width, height: size.height), false, 0)
-        
-            let context = UIGraphicsGetCurrentContext()
-            let x = size.width * 0.5
-            let y = size.height * 0.5
-            context?.translateBy(x: x,y: y)
-            context?.rotate(by: .pi)
-            draw(at: CGPoint(x: -x, y: -y))
-            let image = UIGraphicsGetImageFromCurrentImageContext()
-            UIGraphicsEndImageContext()
-            return image!
+            return self.image(rotateBy:.pi)
         }
     }
     public var rotateLeftImage:UIImage
     {
         get {
-            UIGraphicsBeginImageContextWithOptions(CGSize(width: size.height, height: size.width), false, 0)
-        
-            let context = UIGraphicsGetCurrentContext()
-            let x = size.width * 0.5
-            let y = size.height * 0.5
-            context?.translateBy(x: y,y: x)
-            context?.rotate(by: .pi * -0.5)
-            draw(at: CGPoint(x: -x, y: -y))
-            let image = UIGraphicsGetImageFromCurrentImageContext()
-            UIGraphicsEndImageContext()
-            return image!
+            return self.image(rotateBy:.pi * -0.5)
         }
+    }
+    public func image(rotateBy angle:CGFloat) -> UIImage
+    {
+        let transform = CGAffineTransform(rotationAngle: angle)
+        return self.image(apply: transform)
     }
     public func image(aspectFillSize fillSize:CGSize) -> UIImage
     {
