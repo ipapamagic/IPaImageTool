@@ -12,7 +12,7 @@ extension UIImage {
     public func image(apply transform:CGAffineTransform) -> UIImage! {
         let bounds = CGRect(origin: .zero, size: self.size).applying(transform)
         
-        UIGraphicsBeginImageContextWithOptions(bounds.size, true, 0)
+        UIGraphicsBeginImageContextWithOptions(bounds.size, false, 0)
         
         let context = UIGraphicsGetCurrentContext()!
         
