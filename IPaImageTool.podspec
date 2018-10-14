@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'IPaImageTool'
-  s.version          = '2.1'
+  s.version          = '2.2'
   s.summary          = 'Some UIImage modifiy fuction.'
 
 # This description is used to generate tags and improve search results.
@@ -20,7 +20,7 @@ Pod::Spec.new do |s|
   s.description      = <<-DESC
 TODO: Add long description of the pod here.
                        DESC
-  s.swift_version    = '4.1'
+  s.swift_version    = '4.2'
   s.homepage         = 'https://github.com/ipapamagic/IPaImageTool'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
