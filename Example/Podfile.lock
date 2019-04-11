@@ -1,27 +1,16 @@
 PODS:
-  - FBSnapshotTestCase (2.1.4):
-    - FBSnapshotTestCase/SwiftSupport (= 2.1.4)
-  - FBSnapshotTestCase/Core (2.1.4)
-  - FBSnapshotTestCase/SwiftSupport (2.1.4):
-    - FBSnapshotTestCase/Core
   - IPaImageTool (2.3)
 
 DEPENDENCIES:
-  - FBSnapshotTestCase
   - IPaImageTool (from `../`)
-
-SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
-    - FBSnapshotTestCase
 
 EXTERNAL SOURCES:
   IPaImageTool:
     :path: "../"
 
 SPEC CHECKSUMS:
-  FBSnapshotTestCase: 094f9f314decbabe373b87cc339bea235a63e07a
   IPaImageTool: 33b2bdd76f7bd629f58945205ff754ed02eb9718
 
-PODFILE CHECKSUM: 6cfdf2731d288c5cb7479b09e0e117c78794d60f
+PODFILE CHECKSUM: 8434a921b40534ded8ce8ecf66a0dad0f68f4792
 
 COCOAPODS: 1.7.0.beta.2
