@@ -9,6 +9,20 @@
 import Foundation
 import UIKit
 extension UIImage {
+    public static func createImage(_ size:CGSize,operation:(CGContext)->()) -> UIImage? {
+        UIGraphicsBeginImageContextWithOptions(size, false, 0)
+        defer {
+            UIGraphicsEndImageContext()
+        }
+        guard let context = UIGraphicsGetCurrentContext() else {
+            return nil
+        }
+        operation(context)
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        
+        return image
+    }
+    
     public func image(apply transform:CGAffineTransform) -> UIImage! {
         let bounds = CGRect(origin: .zero, size: self.size).applying(transform)
         
