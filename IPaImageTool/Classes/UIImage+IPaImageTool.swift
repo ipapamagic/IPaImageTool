@@ -9,8 +9,8 @@
 import Foundation
 import UIKit
 extension UIImage {
-    public static func createImage(_ size:CGSize,operation:(CGContext)->()) -> UIImage? {
-        UIGraphicsBeginImageContextWithOptions(size, false, 0)
+    public static func createImage(_ size:CGSize,scale:CGFloat = 0 ,operation:(CGContext)->()) -> UIImage? {
+        UIGraphicsBeginImageContextWithOptions(size, false, scale)
         defer {
             UIGraphicsEndImageContext()
         }
