@@ -9,6 +9,12 @@
 import Foundation
 import UIKit
 extension UIImage {
+    public var heifData: Data? {
+        guard let cgImage = self.cgImage  else {
+            return nil
+        }
+        return CIImage(cgImage: cgImage).heifData
+    }
     public static func createImage(_ size:CGSize,scale:CGFloat = 0 ,operation:(CGContext)->()) -> UIImage? {
         UIGraphicsBeginImageContextWithOptions(size, false, scale)
         defer {
@@ -26,7 +32,7 @@ extension UIImage {
     public func image(apply transform:CGAffineTransform) -> UIImage! {
         let bounds = CGRect(origin: .zero, size: self.size).applying(transform)
         
-        UIGraphicsBeginImageContextWithOptions(bounds.size, false, 0)
+        UIGraphicsBeginImageContext(bounds.size)
         
         let context = UIGraphicsGetCurrentContext()!
         
@@ -40,7 +46,10 @@ extension UIImage {
         
     }
     public func image(cropRect rect:CGRect) -> UIImage! {
-        UIGraphicsBeginImageContextWithOptions(rect.size, false, 0)
+        if let cgImage = self.cgImage ,let newImage = cgImage.cropping(to: rect) {
+            return UIImage(cgImage: newImage)
+        }
+        UIGraphicsBeginImageContext(rect.size)
         draw(at: CGPoint(x: -rect.origin.x, y: -rect.origin.y))
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
@@ -108,8 +117,7 @@ extension UIImage {
         }
     }
     public func image(size newSize:CGSize) -> UIImage {
-        
-        UIGraphicsBeginImageContextWithOptions(newSize, false, 0)
+        UIGraphicsBeginImageContext(newSize)
         draw(in: CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height))
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
@@ -195,7 +203,7 @@ extension UIImage {
     }
     public func image(aspectFillSize fillSize:CGSize) -> UIImage
     {
-        UIGraphicsBeginImageContextWithOptions(fillSize, false, 0)
+        UIGraphicsBeginImageContext(fillSize)
         draw(aspectFillSize: fillSize)
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
