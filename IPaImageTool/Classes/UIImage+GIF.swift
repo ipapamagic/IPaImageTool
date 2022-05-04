@@ -8,6 +8,25 @@
 import UIKit
 
 extension UIImage {
+    @inlinable public class func gifImage(with data:Data,fromBitmask color:UIColor,toBitmask color2:UIColor) -> UIImage? {
+        return self.gifImage(with: data) { cgImage in
+            var minR:CGFloat = 0,maxR:CGFloat = 0,minG:CGFloat = 0,maxG:CGFloat = 0,minB:CGFloat = 0,maxB:CGFloat = 0
+            color.getRed(&minR, green: &minG, blue: &minB, alpha: nil)
+            color2.getRed(&maxR, green: &maxG, blue: &maxB, alpha: nil)
+            let colorMasking = [minR, maxR, minG, maxG, minB, maxB]
+            return cgImage.copy(maskingColorComponents: colorMasking)
+        }
+    }
+    @inlinable public class func gifImage(with data:Data,bitmask color:UIColor) -> UIImage? {
+        return self.gifImage(with: data, fromBitmask: color, toBitmask: color)
+    }
+    @inlinable public class func gifImage(named name:String,bitmask color:UIColor) -> UIImage? {
+        guard let url = Bundle.main
+            .url(forResource: name, withExtension: "gif"),let data = try? Data(contentsOf: url) else {
+            return nil
+        }
+        return self.gifImage(with: data,bitmask:color)
+    }
     public class func gifImage(with data:Data,handleFrame:((CGImage)->CGImage?)? = nil) -> UIImage? {
         guard let source = CGImageSourceCreateWithData(data as CFData, nil) else {
             return nil
@@ -63,7 +82,7 @@ extension UIImage {
         var frame: UIImage
         var frameCount: Int
         for i in 0..<count {
-            var cgImage = images[Int(i)]
+            let cgImage = images[Int(i)]
             frame = UIImage(cgImage: handleFrame?(cgImage) ?? cgImage)
             frameCount = Int(delays[Int(i)] / gcd)
             
@@ -75,7 +94,7 @@ extension UIImage {
                                               duration: Double(duration) / 1000.0)
         return animation
     }
-    public class func gifImage(named name:String,handleFrame:((CGImage)->CGImage?)? = nil) -> UIImage? {
+    @inlinable public class func gifImage(named name:String,handleFrame:((CGImage)->CGImage?)? = nil) -> UIImage? {
         guard let url = Bundle.main
             .url(forResource: name, withExtension: "gif"),let data = try? Data(contentsOf: url) else {
             return nil
