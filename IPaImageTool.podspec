@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'IPaImageTool'
-  s.version          = '2.5'
+  s.version          = '2.6.0'
   s.summary          = 'Some UIImage modifiy fuction.'
 
 # This description is used to generate tags and improve search results.
@@ -30,14 +30,6 @@ TODO: Add long description of the pod here.
 
   s.ios.deployment_target = '11.0'
 
-  s.source_files = 'IPaImageTool/Classes/**/*'
+  s.source_files = 'Sources/IPaImageTool/**/*'
   
-  # s.resource_bundles = {
-  #   'IPaImageTool' => ['IPaImageTool/Assets/*.png']
-  # }
-
-  # s.public_header_files = 'Pod/Classes/**/*.h'
-  # s.frameworks = 'UIKit', 'MapKit'
-  # s.dependency 'AFNetworking', '~> 2.3'
-
 end
