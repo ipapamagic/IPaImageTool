@@ -178,30 +178,56 @@ extension UIImage {
         return image(size:newSize)
     
     }
-    public var rotateRightImage:UIImage
+    @inlinable public var rotateRightImage:UIImage
     {
         get {
             return self.image(rotateBy:.pi * 0.5)
         }
     }
-    public var rotate180Image:UIImage
+    @inlinable public var rotate180Image:UIImage
     {
         get {
             return self.image(rotateBy:.pi)
         }
     }
-    public var rotateLeftImage:UIImage
+    @inlinable public var rotateLeftImage:UIImage
     {
         get {
             return self.image(rotateBy:.pi * -0.5)
         }
     }
-    public func image(rotateBy angle:CGFloat) -> UIImage
+    public func image(orientation:UIImage.Orientation) -> UIImage {
+        guard let cgImage = self.cgImage else {
+            switch orientation {
+            case .down:
+                return self.rotate180Image
+            case .left:
+                return self.rotateLeftImage
+            case .right:
+                return self.rotateRightImage
+            case .up:
+                return self
+            case .upMirrored:
+                return self.withHorizontallyFlippedOrientation()
+            case .downMirrored:
+                return self.rotate180Image.withHorizontallyFlippedOrientation()
+            case .leftMirrored:
+                return self.rotateLeftImage.withHorizontallyFlippedOrientation()
+            case .rightMirrored:
+                return self.rotateRightImage.withHorizontallyFlippedOrientation()
+            @unknown default:
+                return self
+            }
+            
+        }
+        return UIImage(cgImage: cgImage, scale: self.scale, orientation: orientation)
+    }
+    @inlinable public func image(rotateBy angle:CGFloat) -> UIImage
     {
         let transform = CGAffineTransform(rotationAngle: angle)
         return self.image(apply: transform)
     }
-    public func image(aspectFillSize fillSize:CGSize) -> UIImage
+    @inlinable public func image(aspectFillSize fillSize:CGSize) -> UIImage
     {
         UIGraphicsBeginImageContext(fillSize)
         draw(aspectFillSize: fillSize)
