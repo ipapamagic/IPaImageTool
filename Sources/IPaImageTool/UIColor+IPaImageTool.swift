@@ -41,11 +41,18 @@ extension UIColor {
         self.init(red: r, green: g, blue: b, alpha: a)
     }
     public var uiImage:UIImage {
-        return UIImage.createImage(CGSize(width: 1, height: 1)) { (context) in
+        return UIImage.createImage(CGSize(width: 1, height: 1)) { context in
+            
                 context.setFillColor(self.cgColor)
                 context.fill(CGRect(x: 0, y: 0, width: 1, height: 1))
             }!
     }
-    
+    public var inverseColor:UIColor {
+        var r:CGFloat = 0.0; var g:CGFloat = 0.0; var b:CGFloat = 0.0; var a:CGFloat = 0.0;
+        if self.getRed(&r, green: &g, blue: &b, alpha: &a) {
+            return UIColor(red: 1.0-r, green: 1.0 - g, blue: 1.0 - b, alpha: a)
+        }
+        return .black // Return a default colour
+    }
 }
 

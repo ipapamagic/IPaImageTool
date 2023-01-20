@@ -15,45 +15,37 @@ extension UIImage {
         }
         return CIImage(cgImage: cgImage).heifData
     }
-    public static func createImage(_ size:CGSize,scale:CGFloat = 0 ,operation:(CGContext)->()) -> UIImage? {
-        UIGraphicsBeginImageContextWithOptions(size, false, scale)
-        defer {
-            UIGraphicsEndImageContext()
+    public static func createImage(_ size:CGSize ,operation:(CGContext)->()) -> UIImage? {
+        let renderer = UIGraphicsImageRenderer(size: size)
+        return renderer.image { rendererContext in
+            operation(rendererContext.cgContext)
         }
-        guard let context = UIGraphicsGetCurrentContext() else {
-            return nil
-        }
-        operation(context)
-        let image = UIGraphicsGetImageFromCurrentImageContext()
-        
-        return image
     }
    
     public func image(apply transform:CGAffineTransform) -> UIImage! {
         let bounds = CGRect(origin: .zero, size: self.size).applying(transform)
-        
-        UIGraphicsBeginImageContext(bounds.size)
-        
-        let context = UIGraphicsGetCurrentContext()!
-        
-        context.translateBy(x: bounds.size.width * 0.5, y: bounds.size.height * 0.5)
-      
-        context.concatenate(transform)
-        self.draw(at: CGPoint(x: -self.size.width * 0.5, y: -self.size.height * 0.5))
-        let newImage = UIGraphicsGetImageFromCurrentImageContext()!
-        UIGraphicsEndImageContext()
-        return newImage
-        
+        let size = CGSize(width: bounds.width.rounded(.down), height: bounds.height.rounded(.down))
+        return UIImage.createImage(size, operation: {
+            context in
+            context.translateBy(x: size.width * 0.5, y: size.height * 0.5)
+            context.concatenate(transform)
+            context.translateBy(x: -self.size.width * 0.5, y: -self.size.height * 0.5)
+            context.setShouldAntialias(true)
+            context.setAllowsAntialiasing(true)
+            
+            self.draw(at: .zero)
+        }) ?? self
     }
     public func image(cropRect rect:CGRect) -> UIImage! {
-        if let cgImage = self.cgImage ,let newImage = cgImage.cropping(to: rect) {
-            return UIImage(cgImage: newImage)
+        var cropRect = rect
+       
+        if let cgImage = self.cgImage ,let newImage = cgImage.cropping(to: cropRect.applying(CGAffineTransform(scaleX: self.scale, y: self.scale))) {
+            return UIImage(cgImage: newImage,scale: self.scale, orientation: self.imageOrientation)
         }
-        UIGraphicsBeginImageContext(rect.size)
-        draw(at: CGPoint(x: -rect.origin.x, y: -rect.origin.y))
-        let image = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        return image
+        return UIImage.createImage(cropRect.size, operation: {
+            renderContext in
+            draw(at: CGPoint(x: -cropRect.origin.x, y: -cropRect.origin.y))
+        }) ?? self
     }
     public var rotationFixImage:UIImage! {
         get {
@@ -117,22 +109,20 @@ extension UIImage {
         }
     }
     public func image(size newSize:CGSize) -> UIImage {
-        UIGraphicsBeginImageContext(newSize)
-        draw(in: CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height))
-        let image = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        return image!
+        return UIImage.createImage(newSize) { context in
+            self.draw(in: CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height))
+        }!
     }
     public func image(fitSize:CGSize) -> UIImage {
         var newSize = size
         let ratio = size.height / size.width
         if (newSize.width > fitSize.width) {
             newSize.width = fitSize.width
-            newSize.height = newSize.width * ratio
+            newSize.height = (newSize.width * ratio).rounded(.down)
         }
         if(newSize.height > fitSize.height) {
             newSize.height = fitSize.height
-            newSize.width = newSize.height / ratio
+            newSize.width = (newSize.height / ratio).rounded(.down)
         }
         
         return image(size:newSize)
@@ -196,29 +186,31 @@ extension UIImage {
             return self.image(rotateBy:.pi * -0.5)
         }
     }
-    public func image(orientation:UIImage.Orientation) -> UIImage {
+    public func image(orientateBy orientation:UIImage.Orientation) -> UIImage {
+        switch orientation {
+        case .down:
+            return self.rotate180Image
+        case .left:
+            return self.rotateLeftImage
+        case .right:
+            return self.rotateRightImage
+        case .up:
+            return self
+        case .upMirrored:
+            return self.withHorizontallyFlippedOrientation()
+        case .downMirrored:
+            return self.rotate180Image.withHorizontallyFlippedOrientation()
+        case .leftMirrored:
+            return self.rotateLeftImage.withHorizontallyFlippedOrientation()
+        case .rightMirrored:
+            return self.rotateRightImage.withHorizontallyFlippedOrientation()
+        @unknown default:
+            return self
+        }
+    }
+    public func image(with orientation:UIImage.Orientation) -> UIImage {
         guard let cgImage = self.cgImage else {
-            switch orientation {
-            case .down:
-                return self.rotate180Image
-            case .left:
-                return self.rotateLeftImage
-            case .right:
-                return self.rotateRightImage
-            case .up:
-                return self
-            case .upMirrored:
-                return self.withHorizontallyFlippedOrientation()
-            case .downMirrored:
-                return self.rotate180Image.withHorizontallyFlippedOrientation()
-            case .leftMirrored:
-                return self.rotateLeftImage.withHorizontallyFlippedOrientation()
-            case .rightMirrored:
-                return self.rotateRightImage.withHorizontallyFlippedOrientation()
-            @unknown default:
-                return self
-            }
-            
+            return self.image(orientateBy: orientation)
         }
         return UIImage(cgImage: cgImage, scale: self.scale, orientation: orientation)
     }
