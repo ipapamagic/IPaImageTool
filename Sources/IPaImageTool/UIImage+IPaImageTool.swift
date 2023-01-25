@@ -15,8 +15,14 @@ extension UIImage {
         }
         return CIImage(cgImage: cgImage).heifData
     }
-    public static func createImage(_ size:CGSize ,operation:(CGContext)->()) -> UIImage? {
-        let renderer = UIGraphicsImageRenderer(size: size)
+    @inlinable public static func createImage(_ size:CGSize,rendererFormat:UIGraphicsImageRendererFormat? = nil ,operation:(CGContext)->()) -> UIImage? {
+        var renderer:UIGraphicsImageRenderer
+        if let rendererFormat = rendererFormat {
+            renderer = UIGraphicsImageRenderer(size: size, format: rendererFormat)
+        }
+        else {
+            renderer = UIGraphicsImageRenderer(size: size)
+        }
         return renderer.image { rendererContext in
             operation(rendererContext.cgContext)
         }
@@ -25,7 +31,10 @@ extension UIImage {
     public func image(apply transform:CGAffineTransform) -> UIImage! {
         let bounds = CGRect(origin: .zero, size: self.size).applying(transform)
         let size = CGSize(width: bounds.width.rounded(.down), height: bounds.height.rounded(.down))
-        return UIImage.createImage(size, operation: {
+        var format = UIGraphicsImageRendererFormat()
+        format.scale = self.scale
+        
+        return UIImage.createImage(size,rendererFormat: format, operation: {
             context in
             context.translateBy(x: size.width * 0.5, y: size.height * 0.5)
             context.concatenate(transform)
@@ -42,7 +51,9 @@ extension UIImage {
         if let cgImage = self.cgImage ,let newImage = cgImage.cropping(to: cropRect.applying(CGAffineTransform(scaleX: self.scale, y: self.scale))) {
             return UIImage(cgImage: newImage,scale: self.scale, orientation: self.imageOrientation)
         }
-        return UIImage.createImage(cropRect.size, operation: {
+        var format = UIGraphicsImageRendererFormat()
+        format.scale = self.scale
+        return UIImage.createImage(cropRect.size,rendererFormat: format, operation: {
             renderContext in
             draw(at: CGPoint(x: -cropRect.origin.x, y: -cropRect.origin.y))
         }) ?? self
@@ -109,7 +120,9 @@ extension UIImage {
         }
     }
     public func image(size newSize:CGSize) -> UIImage {
-        return UIImage.createImage(newSize) { context in
+        var format = UIGraphicsImageRendererFormat()
+        format.scale = self.scale
+        return UIImage.createImage(newSize,rendererFormat: format) { context in
             self.draw(in: CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height))
         }!
     }
