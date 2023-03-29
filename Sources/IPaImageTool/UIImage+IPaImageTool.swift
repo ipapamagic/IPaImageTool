@@ -120,46 +120,29 @@ extension UIImage {
         }
     }
     public func image(size newSize:CGSize) -> UIImage {
-        var format = UIGraphicsImageRendererFormat()
+        let format = UIGraphicsImageRendererFormat()
         format.scale = self.scale
         return UIImage.createImage(newSize,rendererFormat: format) { context in
             self.draw(in: CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height))
         }!
     }
     public func image(fitSize:CGSize) -> UIImage {
-        var newSize = size
-        let ratio = size.height / size.width
-        if (newSize.width > fitSize.width) {
-            newSize.width = fitSize.width
-            newSize.height = (newSize.width * ratio).rounded(.down)
-        }
-        if(newSize.height > fitSize.height) {
-            newSize.height = fitSize.height
-            newSize.width = (newSize.height / ratio).rounded(.down)
-        }
-        
-        return image(size:newSize)
+        let oRatio = size.ratio
+        let fitSizeRatio = fitSize.ratio
+        return oRatio > fitSizeRatio ? image(fitWidth: fitSize.width) : image(fitHeight: fitSize.height)
     }
     public func image(fitWidth width:CGFloat) -> UIImage {
         var newSize = size
-        let ratio = size.height / size.width
-        if newSize.width > width {
-            newSize.width = width
-            newSize.height = newSize.width * ratio
-        }
-        
+        newSize.width = width
+        newSize.height = newSize.width / size.ratio
         return image(size:newSize)
     }
     
     public func image(fitHeight height:CGFloat) -> UIImage
     {
         var newSize = size
-        let ratio = size.width / size.height
-        if newSize.height > height {
-            newSize.height = height
-            newSize.width = newSize.height * ratio
-        }
-    
+        newSize.height = height
+        newSize.width = newSize.height * size.ratio
         return image(size:newSize)
     }
     public func image(withWidth width:CGFloat) -> UIImage
