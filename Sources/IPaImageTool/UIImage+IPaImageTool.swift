@@ -58,6 +58,27 @@ extension UIImage {
             draw(at: CGPoint(x: -cropRect.origin.x, y: -cropRect.origin.y))
         }) ?? self
     }
+    public var grayScaleImage:UIImage? {
+        guard let cgImage = self.cgImage else { return nil }
+        // 2. 定義圖片的大小
+        let width = cgImage.width
+        let height = cgImage.height
+        let colorSpace = CGColorSpaceCreateDeviceGray() // 創建灰階色彩空間
+        
+        // 3. 創建 CGContext
+        guard let context = CGContext(data: nil,
+                                      width: width,
+                                      height: height,
+                                      bitsPerComponent: 8,
+                                      bytesPerRow: 0,
+                                      space: colorSpace,
+                                      bitmapInfo: CGImageAlphaInfo.none.rawValue) else { return nil }
+        
+        context.draw(cgImage, in: CGRect(x: 0, y: 0, width: width, height: height))
+        
+        guard let grayImage = context.makeImage() else { return nil }
+        return UIImage(cgImage: grayImage)
+    }
     public var rotationFixImage:UIImage! {
         get {
             if imageOrientation == .up {
