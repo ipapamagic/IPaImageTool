@@ -21,7 +21,9 @@ extension UIImage {
             renderer = UIGraphicsImageRenderer(size: size, format: rendererFormat)
         }
         else {
-            renderer = UIGraphicsImageRenderer(size: size)
+            let format = UIGraphicsImageRendererFormat.default()
+            format.scale = UIScreen.main.scale
+            renderer = UIGraphicsImageRenderer(size: size, format: format)
         }
         return renderer.image { rendererContext in
             operation(rendererContext.cgContext)
