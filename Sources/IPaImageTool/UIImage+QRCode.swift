@@ -22,7 +22,7 @@ extension UIImage {
         let data = string.data(using: encoding)
         filter.setDefaults()
         filter.setValue(data, forKey: "inputMessage")
-        filter.setValue(inputCorrectionLevel, forKey: "inputCorrectionLevel")
+        filter.setValue(inputCorrectionLevel.rawValue, forKey: "inputCorrectionLevel")
         guard let outputImage = filter.outputImage else {
             return nil
         }
