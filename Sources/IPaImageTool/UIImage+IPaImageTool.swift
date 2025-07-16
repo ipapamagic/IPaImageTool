@@ -29,14 +29,34 @@ extension UIImage {
             operation(rendererContext.cgContext)
         }
     }
-   
-    public func image(apply transform:CGAffineTransform) -> UIImage! {
+    public func image(by brightness:Float,contrast:Float) -> UIImage? {
+        guard let ciImage = CIImage(image: self) else { return nil }
+        
+        let filter = CIFilter(name: "CIColorControls")
+        filter?.setValue(ciImage, forKey: kCIInputImageKey)
+        filter?.setValue(brightness, forKey: kCIInputBrightnessKey)
+        filter?.setValue(contrast, forKey: kCIInputContrastKey)
+        
+        let context = CIContext()
+        if let outputImage = filter?.outputImage,
+           let cgImage = context.createCGImage(outputImage, from: outputImage.extent) {
+            return UIImage(cgImage: cgImage, scale: self.scale, orientation: self.imageOrientation)
+        }
+        return nil
+    }
+    public func image(apply transform:CGAffineTransform,format:UIGraphicsImageRendererFormat? = nil) -> UIImage! {
         let bounds = CGRect(origin: .zero, size: self.size).applying(transform)
         let size = CGSize(width: bounds.width.rounded(.down), height: bounds.height.rounded(.down))
-        var format = UIGraphicsImageRendererFormat()
-        format.scale = self.scale
+        var renderFormat:UIGraphicsImageRendererFormat
+        if let format = format {
+            renderFormat = format
+        }
+        else {
+            renderFormat = UIGraphicsImageRendererFormat.default()
+            renderFormat.scale = self.scale
+        }
         
-        return UIImage.createImage(size,rendererFormat: format, operation: {
+        return UIImage.createImage(size,rendererFormat: renderFormat, operation: {
             context in
             context.translateBy(x: size.width * 0.5, y: size.height * 0.5)
             context.concatenate(transform)
@@ -47,15 +67,22 @@ extension UIImage {
             self.draw(at: .zero)
         }) ?? self
     }
-    public func image(cropRect rect:CGRect) -> UIImage! {
+    public func image(cropRect rect:CGRect,format:UIGraphicsImageRendererFormat? = nil) -> UIImage! {
         var cropRect = rect
        
         if let cgImage = self.cgImage ,let newImage = cgImage.cropping(to: cropRect.applying(CGAffineTransform(scaleX: self.scale, y: self.scale))) {
             return UIImage(cgImage: newImage,scale: self.scale, orientation: self.imageOrientation)
         }
-        var format = UIGraphicsImageRendererFormat()
-        format.scale = self.scale
-        return UIImage.createImage(cropRect.size,rendererFormat: format, operation: {
+        var renderFormat:UIGraphicsImageRendererFormat
+        if let format = format {
+            renderFormat = format
+        }
+        else {
+            renderFormat = UIGraphicsImageRendererFormat.default()
+            renderFormat.scale = self.scale
+        }
+        
+        return UIImage.createImage(cropRect.size,rendererFormat: renderFormat, operation: {
             renderContext in
             draw(at: CGPoint(x: -cropRect.origin.x, y: -cropRect.origin.y))
         }) ?? self
@@ -142,9 +169,16 @@ extension UIImage {
             return img
         }
     }
-    public func image(size newSize:CGSize) -> UIImage {
-        let format = UIGraphicsImageRendererFormat()
-        format.scale = self.scale
+    public func image(size newSize:CGSize,format:UIGraphicsImageRendererFormat? = nil) -> UIImage {
+        var rendererFormat:UIGraphicsImageRendererFormat
+        if let format = format {
+            rendererFormat = format
+        }
+        else {
+            rendererFormat = UIGraphicsImageRendererFormat.default()
+            rendererFormat.scale = self.scale
+        }
+        
         return UIImage.createImage(newSize,rendererFormat: format) { context in
             self.draw(in: CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height))
         }!
@@ -238,13 +272,21 @@ extension UIImage {
         let transform = CGAffineTransform(rotationAngle: angle)
         return self.image(apply: transform)
     }
-    @inlinable public func image(aspectFillSize fillSize:CGSize) -> UIImage
+    @inlinable public func image(aspectFillSize fillSize:CGSize,format:UIGraphicsImageRendererFormat? = nil) -> UIImage
     {
-        UIGraphicsBeginImageContext(fillSize)
-        draw(aspectFillSize: fillSize)
-        let image = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        return image!
+        var rendererFormat:UIGraphicsImageRendererFormat
+        if let format = format {
+            rendererFormat = format
+        }
+        else {
+            rendererFormat = UIGraphicsImageRendererFormat.default()
+            rendererFormat.scale = self.scale
+        }
+        
+        return UIImage.createImage(fillSize,rendererFormat: rendererFormat, operation: {
+            context in
+            self.draw(aspectFillSize: fillSize)
+        }) ?? self
     }
     
     public func blurImage(radius:Float) -> UIImage {
