@@ -170,6 +170,7 @@ extension UIImage {
         }
     }
     public func image(size newSize:CGSize,format:UIGraphicsImageRendererFormat? = nil) -> UIImage {
+        // 這裡的 newSize 表示「輸出畫布大小」，圖片會以等比例縮放後置中繪製（Aspect Fit）。
         var rendererFormat:UIGraphicsImageRendererFormat
         if let format = format {
             rendererFormat = format
@@ -178,10 +179,15 @@ extension UIImage {
             rendererFormat = UIGraphicsImageRendererFormat.default()
             rendererFormat.scale = self.scale
         }
-        
-        return UIImage.createImage(newSize,rendererFormat: format) { context in
-            self.draw(in: CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height))
-        }!
+
+        return UIImage.createImage(newSize, rendererFormat: rendererFormat) { _ in
+            // 等比例縮放（Aspect Fit）並置中
+            let scale = min(newSize.width / self.size.width, newSize.height / self.size.height)
+            let drawSize = CGSize(width: self.size.width * scale, height: self.size.height * scale)
+            let origin = CGPoint(x: (newSize.width - drawSize.width) * 0.5,
+                                 y: (newSize.height - drawSize.height) * 0.5)
+            self.draw(in: CGRect(origin: origin, size: drawSize))
+        } ?? self
     }
     public func image(fitSize:CGSize) -> UIImage {
         let oRatio = size.ratio
@@ -202,25 +208,7 @@ extension UIImage {
         newSize.width = newSize.height * size.ratio
         return image(size:newSize)
     }
-    public func image(withWidth width:CGFloat) -> UIImage
-    {
-        var newSize = size
-        let ratio = size.height / size.width
-    
-        newSize.width = width
-        newSize.height = newSize.width * ratio
-        return image(size:newSize)
-    }
-    public func image(withHeight height:CGFloat) -> UIImage
-    {
-        var newSize = size
-        let ratio = size.width / size.height
-    
-        newSize.height = height
-        newSize.width = newSize.height * ratio
-        return image(size:newSize)
-    
-    }
+ 
     @inlinable public var rotateRightImage:UIImage
     {
         get {
